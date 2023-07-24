@@ -6,7 +6,7 @@ COPY ./requirements.txt /tmp/requirements.txt
 COPY ./app /app
 COPY ./scripts /scripts
 
-# Установка временных зависимостей
+# Install temporary dependencies
 RUN apk update && apk upgrade && \
     apk add --no-cache --virtual .build-deps \
     alpine-sdk \
@@ -15,7 +15,7 @@ RUN apk update && apk upgrade && \
     unzip \
     gnupg 
 
-# Установка постоянных зависимостей
+# Install dependencies
 RUN apk add --no-cache \
     xvfb \
     x11vnc \
@@ -37,11 +37,11 @@ RUN apk add --no-cache \
     chromium \
     chromium-chromedriver
 
-# Установка x11vnc
+# Install x11vnc
 RUN mkdir ~/.vnc
 RUN x11vnc -storepasswd 1234 ~/.vnc/passwd
 
-# Установка зависимостей Python
+# Install Python dependencies
 RUN pip install --no-cache-dir -r /tmp/requirements.txt && \
     rm /tmp/requirements.txt
 
@@ -52,7 +52,7 @@ RUN chmod -R +x /scripts
 ENV PATH="/scripts:$PATH"
 ENV DISPLAY=:0
 
-# Удаление временных зависимостей
+# Delete temporary dependencies
 RUN apk del .build-deps
 
 CMD startup.sh
